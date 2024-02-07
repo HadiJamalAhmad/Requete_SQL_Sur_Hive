@@ -1,0 +1,219 @@
+Create DATABASE  IF NOT EXISTS paintingsdb;
+
+
+
+
+use paintingsdb;
+DROP TABLE IF EXISTS paintingsdb.artist;
+CREATE EXTERNAL TABLE paintingsdb.artist (
+  artist_id INT,
+  full_name STRING,
+  first_name STRING,
+  middle_names STRING,
+  nationality STRING,
+  style STRING,
+  birth INT,
+  death INT
+  
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+LOCATION '/user/hive/warehouse/data/artist';
+
+
+use paintingsdb;
+DROP TABLE IF EXISTS paintingsdb.internal_artist;
+CREATE TABLE paintingsdb.internal_artist (
+  artist_id INT,
+  full_name STRING,
+  first_name STRING,
+  middle_names STRING,
+  nationality STRING,
+  style STRING,
+  birth INT,
+  death INT
+  
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ',';
+LOAD DATA  INPATH '/user/hive/warehouse/data/artist/artist.csv' INTO TABLE paintingsdb.internal_artist;
+
+
+use paintingsdb;
+DROP TABLE IF EXISTS paintingsdb.canvas_size;
+CREATE EXTERNAL TABLE paintingsdb.canvas_size (
+  size_id INT,
+  width INT,
+  height INT,
+  label STRING
+  
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+LOCATION '/user/hive/warehouse/data/canvas_size';
+
+
+use paintingsdb;
+DROP TABLE IF EXISTS paintingsdb.internal_canvas_size;
+CREATE TABLE paintingsdb.internal_canvas_size (
+  size_id INT,
+  width INT,
+  height INT,
+  label STRING
+  
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ',';
+LOAD DATA  INPATH '/user/hive/warehouse/data/canvas_size/canvas_size.csv' INTO TABLE paintingsdb.internal_canvas_size;
+
+
+use paintingsdb;
+DROP TABLE IF EXISTS paintingsdb.image_link;
+CREATE EXTERNAL TABLE paintingsdb.image_link (
+  work_id INT,
+  url STRING,
+  thumbnail_small_url STRING,
+  thumbnail_large_url STRING
+  
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+LOCATION '/user/hive/warehouse/data/image_link';
+
+
+use paintingsdb;
+DROP TABLE IF EXISTS paintingsdb.internal_image_link;
+CREATE TABLE paintingsdb.internal_image_link (
+  work_id INT,
+  url STRING,
+  thumbnail_small_url STRING,
+  thumbnail_large_url STRING
+  
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ',';
+LOAD DATA  INPATH '/user/hive/warehouse/data/image_link/image_link.csv' INTO TABLE paintingsdb.internal_image_link;
+
+
+
+use paintingsdb;
+DROP TABLE IF EXISTS paintingsdb.internal_museum;
+CREATE TABLE paintingsdb.internal_museum (
+  museum_id INT,
+  name STRING,
+  address STRING,
+  city STRING,
+  state STRING,
+  postal INT,
+  country STRING,
+  url STRING
+  
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ',';
+LOAD DATA  INPATH '/user/hive/warehouse/data/museum/museum.csv' INTO TABLE paintingsdb.internal_museum;
+
+
+
+
+use paintingsdb;
+DROP TABLE IF EXISTS paintingsdb.museum_hours;
+CREATE EXTERNAL TABLE paintingsdb.museum_hours (
+  museum_id INT,
+  day STRING,
+  open STRING,
+  close STRING
+  
+  
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+LOCATION '/user/hive/warehouse/data/museum_hours';
+
+
+use paintingsdb;
+DROP TABLE IF EXISTS paintingsdb.internal_museum_hours;
+CREATE TABLE paintingsdb.internal_museum_hours (
+  museum_id INT,
+  day STRING,
+  open STRING,
+  close STRING
+  
+  
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ',';
+LOAD DATA  INPATH '/user/hive/warehouse/data/museum_hours/museum_hours.csv' INTO TABLE paintingsdb.internal_museum_hours;
+
+
+
+use paintingsdb;
+DROP TABLE IF EXISTS paintingsdb.internal_product_size;
+CREATE TABLE paintingsdb.internal_product_size (
+  work_id INT,
+  size_id INT,
+  sale_price INT,
+  regular_price INT
+  
+  
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ',';
+LOAD DATA  INPATH '/user/hive/warehouse/data/product_size/product_size.csv' INTO TABLE paintingsdb.internal_product_size;
+
+
+use paintingsdb;
+DROP TABLE IF EXISTS paintingsdb.subject;
+CREATE EXTERNAL TABLE paintingsdb.subject (
+  work_id INT,
+  subject STRING
+  
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+LOCATION '/user/hive/warehouse/data/subject';
+
+
+use paintingsdb;
+DROP TABLE IF EXISTS paintingsdb.internal_subject;
+CREATE TABLE paintingsdb.internal_subject (
+  work_id INT,
+  subject STRING
+  
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ',';
+LOAD DATA  INPATH '/user/hive/warehouse/data/subject/subject.csv' INTO TABLE paintingsdb.internal_subject;
+
+
+
+use paintingsdb;
+DROP TABLE IF EXISTS paintingsdb.internal_work;
+CREATE TABLE paintingsdb.internal_work (
+  work_id INT,
+  name STRING,
+  artist_id INT,
+  style String,
+  museum_id INT
+  
+  
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ',';
+LOAD DATA  INPATH '/user/hive/warehouse/data/work/work.csv' INTO TABLE paintingsdb.internal_work;
+
+
+
+
+
+CREATE TABLE test_parquet
+(
+work_id INT,
+subject STRING
+)
+STORED AS PARQUET;
+
+INSERT INTO TABLE test_parquet  SELECT * FROM internal_subject;
+
+DESCRIBE FORMATTED test_parquet;
+
